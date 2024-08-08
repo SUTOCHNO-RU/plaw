@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<title>Переход на страницу оплаты</title>
+
+<script>
+function commission_calc() {
+  let sum = params.get("sum");
+  let a = 0.02;
+  let amount_due = sum * (1 - a);
+  document.getElementsByName("sum")[0].value = amount_due;
+}
+</script>
+
+<style type="text/css">
+	.form1 {
+		display:none;
+	}
+	.blink_me {
+	  animation: blinker 3s linear infinite;
+	}
+
+	@keyframes blinker {
+	  50% {
+		opacity: 0;
+	  }
+	}
+	
+	.message_in_circle { 
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-moz-transform: translateX(-50%) translateY(-50%);
+		-webkit-transform: translateX(-50%) translateY(-50%);
+		transform: translateX(-50%) translateY(-50%);
+	}
+	.button {
+		background-color: #008CBA; /* Blue */
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		border-radius: 8px;
+	}
+</style>
+
+<noscript>
+<style type="text/css">
+	.form1 {
+		display: inline-block;
+	}
+</style>
+</noscript>
+
+</head>
+
+<body>
+
+<div class="form1" style="z-index: 999; position: relative;">
+<form method="POST" id="payment-form" action="https://yoomoney.ru/quickpay/confirm">
+    <input type="hidden" name="receiver" value="params.get("destid");>">
+    <input type="hidden" name="label" value="<?php echo $billid; ?>">
+	<input type="hidden" name="formcomment" value="Оплата бронирования">
+    <input type="hidden" name="short-dest" value="Оплата бронирования">
+    <input type="hidden" name="quickpay-form" value="button">
+    <input type="hidden" name="targets" value="Оплата бронирования №<?php echo $billid; ?>">
+    <input type="hidden" name="sum" value="<?php echo $amount; ?>" data-type="number">
+    <label style="display:none;"><input type="radio" name="paymentType" value="AC" checked="true">Банковской картой</label>
+    <input type="submit" class="button" value="Нажмите если ваш браузер не поддерживает JavaScript">
+</form>
+
+</div>
+<div class="blink_me">
+<div class="message_in_circle">
+<img src="visa-mastercard.png" style="width:128px;">
+</div>
+</div>
+
+<script type="text/javascript">
+
+
+    window.onload=function(){
+		commission_calc();
+        var auto = setTimeout(function(){ autoRefresh(); }, 1000);
+
+        /*function submitform(){
+          document.forms["payment-form"].submit();
+        }*/
+
+        function autoRefresh(){
+           clearTimeout(auto);
+           auto = setTimeout(function(){ submitform(); autoRefresh(); }, 1000);
+        }
+    }
+/**/
+</script>
+</body>
+
+</html>
